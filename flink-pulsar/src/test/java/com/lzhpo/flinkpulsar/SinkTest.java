@@ -31,13 +31,13 @@ public class SinkTest {
         DataStreamSource<SendData> dataStreamSource = env.fromElements(sendData);
 
         PulsarFlinkSink<String> pulsarFlinkSink = PulsarFlinkSink.builder(new SimpleStringSchema())
-                .pulsarServerUrl("pulsar://192.168.200.109:6650")
-                .topic("topic1")
-                .batchingMaxPublishDelay(10)
-                .sendTimeout(10)
+                .setPulsarServerUrl("pulsar://192.168.200.109:6650")
+                .setTopic("topic1")
+                .setBatchingMaxPublishDelay(10)
+                .setSendTimeout(10)
                 // 发送一条消息的时候要同步发送
-                .sendAndClose(true)
-                .sendData(null);
+                .setSendAndClose(true)
+                .setSendData(sendData);
 
         dataStreamSource
                 .addSink(pulsarFlinkSink)

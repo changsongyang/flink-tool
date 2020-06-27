@@ -115,32 +115,32 @@ public class PulsarFlinkSink<T> extends RichSinkFunction<SendData> {
         return new PulsarFlinkSink<>(deserializationSchema);
     }
 
-    public PulsarFlinkSink<T> pulsarServerUrl(String pulsarServerUrl) {
+    public PulsarFlinkSink<T> setPulsarServerUrl(String pulsarServerUrl) {
         ProducerConfigConstant.PULSAR_SERVER_URL = pulsarServerUrl;
         return this;
     }
 
-    public PulsarFlinkSink<T> topic(String topic) {
+    public PulsarFlinkSink<T> setTopic(String topic) {
         ProducerConfigConstant.TOPIC = topic;
         return this;
     }
 
-    public PulsarFlinkSink<T> batchingMaxPublishDelay(int batchingMaxPublishDelay) {
+    public PulsarFlinkSink<T> setBatchingMaxPublishDelay(int batchingMaxPublishDelay) {
         ProducerConfigConstant.BATCHING_MAX_PUBLISH_DELAY = batchingMaxPublishDelay;
         return this;
     }
 
-    public PulsarFlinkSink<T> sendTimeout(int sendTimeout) {
+    public PulsarFlinkSink<T> setSendTimeout(int sendTimeout) {
         ProducerConfigConstant.SEND_TIMEOUT = sendTimeout;
         return this;
     }
 
-    public PulsarFlinkSink<T> sendAndClose(boolean sendAndClone) {
+    public PulsarFlinkSink<T> setSendAndClose(boolean sendAndClone) {
         ProducerConfigConstant.SEND_AND_CLOSE = sendAndClone;
         return this;
     }
 
-    public PulsarFlinkSink<T> sendData(SendData sendData) {
+    public PulsarFlinkSink<T> setSendData(SendData sendData) {
         ProducerConfigConstant.SEND_DATA = sendData;
         return this;
     }

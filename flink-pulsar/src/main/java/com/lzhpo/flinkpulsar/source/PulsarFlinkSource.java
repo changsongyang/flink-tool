@@ -146,37 +146,37 @@ public class PulsarFlinkSource<T> extends RichSourceFunction<byte[]> {
         return new PulsarFlinkSource<>(deserializationSchema);
     }
 
-    public PulsarFlinkSource<T> pulsarServerUrl(String pulsarServerUrl) {
+    public PulsarFlinkSource<T> setPulsarServerUrl(String pulsarServerUrl) {
         ConsumerConfigConstant.PULSAR_SERVER_URL = pulsarServerUrl;
         return this;
     }
 
-    public PulsarFlinkSource<T> topic(String topic) {
+    public PulsarFlinkSource<T> setTopic(String topic) {
         ConsumerConfigConstant.TOPIC = topic;
         return this;
     }
 
-    public PulsarFlinkSource<T> subscriptionName(String subscriptionName) {
+    public PulsarFlinkSource<T> setSubscriptionName(String subscriptionName) {
         ConsumerConfigConstant.SUBSCRIPTION_NAME = subscriptionName;
         return this;
     }
 
-    public PulsarFlinkSource<T> ackTimeout(long ackTimeout) {
+    public PulsarFlinkSource<T> setAckTimeout(long ackTimeout) {
         ConsumerConfigConstant.ACK_TIMEOUT = ackTimeout;
         return this;
     }
 
-    public PulsarFlinkSource<T> subscriptionType(SubscriptionType subscriptionType) {
+    public PulsarFlinkSource<T> setSubscriptionType(SubscriptionType subscriptionType) {
         ConsumerConfigConstant.SUBSCRIPTION_TYPE = subscriptionType;
         return this;
     }
 
-    public PulsarFlinkSource<T> autoDelData(boolean autoDelData) {
+    public PulsarFlinkSource<T> setAutoDelData(boolean autoDelData) {
         ConsumerConfigConstant.AUTO_DEL_DATA = autoDelData;
         return this;
     }
 
-    public PulsarFlinkSource<T> alwaysReceive(boolean alwaysReceive) {
+    public PulsarFlinkSource<T> setAlwaysReceive(boolean alwaysReceive) {
         ConsumerConfigConstant.ALWAYS_RECEIVE = alwaysReceive;
         return this;
     }

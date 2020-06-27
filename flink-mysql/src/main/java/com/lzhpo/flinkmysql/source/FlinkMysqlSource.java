@@ -82,22 +82,22 @@ public class FlinkMysqlSource<T> extends RichSourceFunction<ArrayList> {
         return new FlinkMysqlSource<>(deserializationSchema);
     }
 
-    public FlinkMysqlSource<T> url(String url) {
+    public FlinkMysqlSource<T> setUrl(String url) {
         MysqlConfigConstant.URL = url;
         return this;
     }
 
-    public FlinkMysqlSource<T> username(String username) {
+    public FlinkMysqlSource<T> setUsername(String username) {
         MysqlConfigConstant.USERNAME = username;
         return this;
     }
 
-    public FlinkMysqlSource<T> password(String password) {
+    public FlinkMysqlSource<T> setPassword(String password) {
         MysqlConfigConstant.PASSWORD = password;
         return this;
     }
 
-    public FlinkMysqlSource<T> sql(String sql) {
+    public FlinkMysqlSource<T> setSql(String sql) {
         MysqlConfigConstant.SQL = sql;
         return this;
     }

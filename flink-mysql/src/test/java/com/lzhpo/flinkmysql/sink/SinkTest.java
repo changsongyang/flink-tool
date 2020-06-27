@@ -19,10 +19,10 @@ public class SinkTest {
 
         dataStreamSource.addSink(new FlinkMysqlSink<>(
                 new SimpleStringSchema())
-                .url("jdbc:mysql://localhost:3306/study-flink?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=CTT&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false")
-                .username("root")
-                .password("123456")
-                .sql("INSERT INTO `study-flink`.`tb_transaction`(`transaction_id`, `card_number`, `terminal_id`, `transaction_date`, `transaction_time`, `transaction_type`, `amount`) VALUES (1, 111, 111, '2020-06-27 17:55:43', '17:55:48', 1, 234.11)"));
+                .setUrl("jdbc:mysql://localhost:3306/study-flink?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=CTT&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false")
+                .setUsername("root")
+                .setPassword("123456")
+                .setSql("INSERT INTO `study-flink`.`tb_transaction`(`transaction_id`, `card_number`, `terminal_id`, `transaction_date`, `transaction_time`, `transaction_type`, `amount`) VALUES (1, 111, 111, '2020-06-27 17:55:43', '17:55:48', 1, 234.11)"));
 
         env.execute("Flink sink mysql job");
     }

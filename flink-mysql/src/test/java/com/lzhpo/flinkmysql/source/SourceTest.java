@@ -19,10 +19,10 @@ public class SourceTest {
 
         DataStreamSource<ArrayList> dataStreamSource = env.addSource(
                 FlinkMysqlSource.build(new SimpleStringSchema())
-                .url("jdbc:mysql://localhost:3306/study-flink?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=CTT&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false")
-                .username("root")
-                .password("123456")
-                .sql("select id,name,course,score from tb_student;"));
+                .setUrl("jdbc:mysql://localhost:3306/study-flink?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=CTT&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false")
+                .setUsername("root")
+                .setPassword("123456")
+                .setSql("select id,name,course,score from tb_student;"));
 
         dataStreamSource.flatMap(new FlatMapFunction<ArrayList, Student>() {
             @Override

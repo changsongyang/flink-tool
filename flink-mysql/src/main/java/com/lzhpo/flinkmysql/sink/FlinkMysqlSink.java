@@ -61,22 +61,22 @@ public class FlinkMysqlSink<T> extends RichSinkFunction<String> {
         return new FlinkMysqlSink<>(deserializationSchema);
     }
 
-    public FlinkMysqlSink<T> url(String url) {
+    public FlinkMysqlSink<T> setUrl(String url) {
         MysqlConfigConstant.URL = url;
         return this;
     }
 
-    public FlinkMysqlSink<T> username(String username) {
+    public FlinkMysqlSink<T> setUsername(String username) {
         MysqlConfigConstant.USERNAME = username;
         return this;
     }
 
-    public FlinkMysqlSink<T> password(String password) {
+    public FlinkMysqlSink<T> setPassword(String password) {
         MysqlConfigConstant.PASSWORD = password;
         return this;
     }
 
-    public FlinkMysqlSink<T> sql(String sql) {
+    public FlinkMysqlSink<T> setSql(String sql) {
         MysqlConfigConstant.SQL = sql;
         return this;
     }

@@ -20,9 +20,9 @@ public class SourceTest {
 
         PulsarFlinkSource<String> builder = PulsarFlinkSource.builder(
                 new SimpleStringSchema())
-                .pulsarServerUrl("pulsar://192.168.200.109:6650")
-                .topic("topic1")
-                .subscriptionName("test-sub");
+                .setPulsarServerUrl("pulsar://192.168.200.109:6650")
+                .setTopic("topic1")
+                .setSubscriptionName("test-sub");
 
         env.addSource(builder)
                 .flatMap(new FlatMapFunction<byte[], String>() {
