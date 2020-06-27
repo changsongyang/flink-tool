@@ -1,5 +1,7 @@
 package com.lzhpo.flinkpulsar.sink;
 
+import com.lzhpo.common.SendData;
+
 /**
  * 生产者相关参数配置
  *

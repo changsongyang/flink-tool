@@ -17,6 +17,10 @@
             <artifactId>pulsar-client</artifactId>
             <version>${pulsar.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.lzhpo</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
