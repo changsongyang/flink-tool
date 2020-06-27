@@ -58,11 +58,9 @@ public class SendData implements Serializable {
             this.sendData.creator = creator;
             return this;
         }
-
         public SendData builded() {
             return sendData;
         }
-
     }
 
 }
