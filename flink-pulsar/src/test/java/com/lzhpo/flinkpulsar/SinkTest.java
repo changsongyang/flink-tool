@@ -1,7 +1,7 @@
-package com.lzhpo.pulsarflink;
+package com.lzhpo.flinkpulsar;
 
-import com.lzhpo.pulsarflink.sink.PulsarFlinkSink;
-import com.lzhpo.pulsarflink.sink.SendData;
+import com.lzhpo.flinkpulsar.sink.PulsarFlinkSink;
+import com.lzhpo.flinkpulsar.sink.SendData;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;

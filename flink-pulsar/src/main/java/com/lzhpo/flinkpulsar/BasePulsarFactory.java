@@ -1,4 +1,4 @@
-package com.lzhpo.pulsarflink;
+package com.lzhpo.flinkpulsar;
 
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;

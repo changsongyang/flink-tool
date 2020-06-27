@@ -1,4 +1,4 @@
-package com.lzhpo.pulsarflink.sink;
+package com.lzhpo.flinkpulsar.sink;
 
 import lombok.Data;
 

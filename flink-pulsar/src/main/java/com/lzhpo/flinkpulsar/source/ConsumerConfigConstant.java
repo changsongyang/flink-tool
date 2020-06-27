@@ -1,4 +1,4 @@
-package com.lzhpo.pulsarflink.source;
+package com.lzhpo.flinkpulsar.source;
 
 import org.apache.pulsar.client.api.SubscriptionType;
 

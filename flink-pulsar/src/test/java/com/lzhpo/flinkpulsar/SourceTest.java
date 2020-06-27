@@ -1,6 +1,6 @@
-package com.lzhpo.pulsarflink;
+package com.lzhpo.flinkpulsar;
 
-import com.lzhpo.pulsarflink.source.PulsarFlinkSource;
+import com.lzhpo.flinkpulsar.source.PulsarFlinkSource;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;

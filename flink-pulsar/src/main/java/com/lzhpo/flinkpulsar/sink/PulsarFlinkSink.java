@@ -1,6 +1,6 @@
-package com.lzhpo.pulsarflink.sink;
+package com.lzhpo.flinkpulsar.sink;
 
-import com.lzhpo.pulsarflink.ProducerSinkFactory;
+import com.lzhpo.flinkpulsar.ProducerSinkFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.configuration.Configuration;
