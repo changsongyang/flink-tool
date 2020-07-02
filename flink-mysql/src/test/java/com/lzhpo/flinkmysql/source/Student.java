@@ -41,7 +41,7 @@ public class Student implements Serializable {
     }
 
     public static class Builder {
-        private final Student student;
+        private Student student;
 
         public Builder() {
             student = new Student();

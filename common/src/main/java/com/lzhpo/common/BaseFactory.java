@@ -1,14 +1,18 @@
 package com.lzhpo.common;
 
+import java.io.Serializable;
+
 /**
+ * BaseFactory：必须实现序列化，否则无法执行 Flink Job
+ *
  * @author lzhpo
  */
-public abstract class BaseFactory<T> {
+public abstract class BaseFactory<T> implements Serializable {
 
     /**
-     * 创建连接：消费者或生产者
+     * createFactory
      *
-     * @return T
+     * @return <T> T
      */
     public abstract T createFactory();
 
