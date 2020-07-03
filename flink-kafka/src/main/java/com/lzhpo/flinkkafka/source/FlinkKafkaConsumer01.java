@@ -54,7 +54,7 @@ public class FlinkKafkaConsumer01<IN> extends RichSourceFunction<ConsumerRecord<
         super.open(parameters);
         // 构建一个消费者
         consumer = kafkaConsumerConfig.createFactory();
-        log.info("成功创建一个消费者!");
+        log.info("Create new consumer successfully!");
     }
 
     @Override
@@ -63,19 +63,28 @@ public class FlinkKafkaConsumer01<IN> extends RichSourceFunction<ConsumerRecord<
         if (consumer != null) {
             // 关闭
             consumer.close();
-            log.info("已关闭Kafka消费者连接！");
+            log.info("Already close kafka connection.");
         }
     }
 
     @Override
-    public void run(SourceContext<ConsumerRecord<String, String>> ctx) throws Exception {
+    public void run(SourceContext<ConsumerRecord<String, String>> ctx) {
         consumer.subscribe(topics);
         while (running) {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMinutes(this.pollTimeOut));
             records.forEach(record -> {
-                log.info("收到新消息: " + record.toString());
+                log.info("Receive new message: " + record.toString());
                 // Flink收集数据
                 ctx.collect(record);
+                // 异步提交offset
+                consumer.commitAsync((offsets, exception) -> {
+                    log.info("offsets:{}", offsets);
+                    if (exception == null) {
+                        log.info("Commit offset successfully!");
+                    } else {
+                        log.error("Commit offset fail!{}", exception.getMessage());
+                    }
+                });
             });
         }
     }

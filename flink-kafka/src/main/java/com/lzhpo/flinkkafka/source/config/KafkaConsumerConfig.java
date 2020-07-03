@@ -15,7 +15,7 @@ public class KafkaConsumerConfig extends BaseFactory<Consumer<String, String>> {
 
     private String bootstrapServers = "localhost:9092";
     private String groupId = "default-group";
-    private boolean enableAutoCommit = true;
+    private boolean enableAutoCommit = false;
     private String keyDeserializer = "org.apache.kafka.common.serialization.StringDeserializer";
     private String valueDeserializer = "org.apache.kafka.common.serialization.StringDeserializer";
 

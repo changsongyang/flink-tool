@@ -34,7 +34,7 @@ public class ConsumerTest {
                         KafkaConsumerConfig.builder()
                                 .setBootstrapServers("192.168.200.109:9092")
                                 .setGroupId("flink-consumer01-test")
-                                .setEnableAutoCommit(true)
+                                .setEnableAutoCommit(false)
                                 .setKeyDeserializer("org.apache.kafka.common.serialization.StringDeserializer")
                                 .setValueDeserializer("org.apache.kafka.common.serialization.StringDeserializer")
                                 .build(),
