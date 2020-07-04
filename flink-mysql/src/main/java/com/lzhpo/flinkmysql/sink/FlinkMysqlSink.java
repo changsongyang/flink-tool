@@ -17,67 +17,67 @@ import java.sql.PreparedStatement;
  */
 public class FlinkMysqlSink<T> extends RichSinkFunction<String> {
 
-    PreparedStatement ps;
-    Connection conn;
+  PreparedStatement ps;
+  Connection conn;
 
-    DeserializationSchema<T> deserializationSchema;
+  DeserializationSchema<T> deserializationSchema;
 
-    public FlinkMysqlSink(DeserializationSchema<T> deserializationSchema) {
-        this.deserializationSchema = deserializationSchema;
+  public FlinkMysqlSink(DeserializationSchema<T> deserializationSchema) {
+    this.deserializationSchema = deserializationSchema;
+  }
+
+  @Override
+  public void open(Configuration parameters) throws Exception {
+    super.open(parameters);
+    conn = new MysqlFactory().createMysqlFactory();
+    ps = this.conn.prepareStatement(MysqlConfigConstant.SQL);
+  }
+
+  @Override
+  public void close() throws Exception {
+    super.close();
+    if (conn != null) {
+      conn.close();
     }
-
-    @Override
-    public void open(Configuration parameters) throws Exception {
-        super.open(parameters);
-        conn = new MysqlFactory().createMysqlFactory();
-        ps = this.conn.prepareStatement(MysqlConfigConstant.SQL);
+    if (ps != null) {
+      ps.close();
     }
+  }
 
-    @Override
-    public void close() throws Exception {
-        super.close();
-        if (conn != null) {
-            conn.close();
-        }
-        if (ps != null) {
-            ps.close();
-        }
-    }
+  @Override
+  public void invoke(String value, Context context) throws Exception {
+    // 执行sql语句
+    ps.executeUpdate();
+  }
 
-    @Override
-    public void invoke(String value, Context context) throws Exception {
-        // 执行sql语句
-        ps.executeUpdate();
-    }
+  /**
+   * build
+   *
+   * @param <T>
+   * @return
+   */
+  public static <T> FlinkMysqlSink<T> build(DeserializationSchema<T> deserializationSchema) {
+    Preconditions.checkNotNull(deserializationSchema, "deserializationSchema cannot be null");
+    return new FlinkMysqlSink<>(deserializationSchema);
+  }
 
-    /**
-     * build
-     *
-     * @param <T>
-     * @return
-     */
-    public static <T> FlinkMysqlSink<T> build(DeserializationSchema<T> deserializationSchema) {
-        Preconditions.checkNotNull(deserializationSchema, "deserializationSchema cannot be null");
-        return new FlinkMysqlSink<>(deserializationSchema);
-    }
+  public FlinkMysqlSink<T> setUrl(String url) {
+    MysqlConfigConstant.URL = url;
+    return this;
+  }
 
-    public FlinkMysqlSink<T> setUrl(String url) {
-        MysqlConfigConstant.URL = url;
-        return this;
-    }
+  public FlinkMysqlSink<T> setUsername(String username) {
+    MysqlConfigConstant.USERNAME = username;
+    return this;
+  }
 
-    public FlinkMysqlSink<T> setUsername(String username) {
-        MysqlConfigConstant.USERNAME = username;
-        return this;
-    }
+  public FlinkMysqlSink<T> setPassword(String password) {
+    MysqlConfigConstant.PASSWORD = password;
+    return this;
+  }
 
-    public FlinkMysqlSink<T> setPassword(String password) {
-        MysqlConfigConstant.PASSWORD = password;
-        return this;
-    }
-
-    public FlinkMysqlSink<T> setSql(String sql) {
-        MysqlConfigConstant.SQL = sql;
-        return this;
-    }
+  public FlinkMysqlSink<T> setSql(String sql) {
+    MysqlConfigConstant.SQL = sql;
+    return this;
+  }
 }

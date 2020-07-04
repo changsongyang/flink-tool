@@ -1,6 +1,5 @@
 package com.lzhpo.flinkmysql;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -12,20 +11,18 @@ import java.sql.SQLException;
  */
 public class MysqlFactory {
 
-    String driver = "com.mysql.jdbc.Driver";
-    Connection connection;
+  String driver = "com.mysql.jdbc.Driver";
+  Connection connection;
 
-    public Connection createMysqlFactory() {
-        try {
-            Class.forName(driver);
-            connection = DriverManager.getConnection(
-                    MysqlConfigConstant.URL,
-                    MysqlConfigConstant.USERNAME,
-                    MysqlConfigConstant.PASSWORD
-            );
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-        return connection;
+  public Connection createMysqlFactory() {
+    try {
+      Class.forName(driver);
+      connection =
+          DriverManager.getConnection(
+              MysqlConfigConstant.URL, MysqlConfigConstant.USERNAME, MysqlConfigConstant.PASSWORD);
+    } catch (ClassNotFoundException | SQLException e) {
+      e.printStackTrace();
     }
+    return connection;
+  }
 }

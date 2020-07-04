@@ -9,11 +9,10 @@ import java.io.Serializable;
  */
 public abstract class BaseFactory<T> implements Serializable {
 
-    /**
-     * createFactory
-     *
-     * @return <T> T
-     */
-    public abstract T createFactory();
-
+  /**
+   * createFactory
+   *
+   * @return <T> T
+   */
+  public abstract T createFactory();
 }

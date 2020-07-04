@@ -10,13 +10,12 @@ import org.apache.pulsar.client.api.PulsarClientException;
  */
 public abstract class BasePulsarFactory<T> {
 
-    /**
-     * 创建连接：消费者或生产者
-     *
-     * @param pulsarClient pulsarClient
-     * @return T
-     * @throws PulsarClientException PulsarClientException
-     */
-    abstract T createPulsarFactory(PulsarClient pulsarClient) throws PulsarClientException;
-
+  /**
+   * 创建连接：消费者或生产者
+   *
+   * @param pulsarClient pulsarClient
+   * @return T
+   * @throws PulsarClientException PulsarClientException
+   */
+  abstract T createPulsarFactory(PulsarClient pulsarClient) throws PulsarClientException;
 }
