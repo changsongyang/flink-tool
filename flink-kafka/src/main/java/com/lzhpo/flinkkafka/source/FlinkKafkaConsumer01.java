@@ -18,13 +18,13 @@ import java.util.Set;
  * @author lzhpo
  */
 @Slf4j
-public class FlinkKafkaConsumer01<T> extends RichSourceFunction<ConsumerRecord<String, String>> {
+public class FlinkKafkaConsumer01<IN> extends RichSourceFunction<ConsumerRecord<String, String>> {
 
   /** Kafka消费者 */
   protected Consumer<String, String> consumer;
 
   /** 序列化 */
-  private DeserializationSchema<T> deserializationSchema;
+  private DeserializationSchema<IN> deserializationSchema;
 
   /** Kafka消费者的配置 */
   private final KafkaConsumerConfig kafkaConsumerConfig;
@@ -46,7 +46,7 @@ public class FlinkKafkaConsumer01<T> extends RichSourceFunction<ConsumerRecord<S
    * @param topics 消费者订阅的topic列表
    */
   public FlinkKafkaConsumer01(
-      DeserializationSchema<T> deserializationSchema,
+      DeserializationSchema<IN> deserializationSchema,
       KafkaConsumerConfig kafkaConsumerConfig,
       Set<String> topics) {
     this.deserializationSchema = deserializationSchema;
@@ -76,7 +76,7 @@ public class FlinkKafkaConsumer01<T> extends RichSourceFunction<ConsumerRecord<S
   public void run(SourceContext<ConsumerRecord<String, String>> ctx) {
     consumer.subscribe(topics);
     while (running) {
-      ConsumerRecords<String, String> records = consumer.poll(Duration.ofMinutes(this.pollTimeOut));
+      ConsumerRecords<String, String> records = consumer.poll(Duration.ofMinutes(pollTimeOut));
       records.forEach(
           record -> {
             log.info("Receive new message: " + record.toString());

@@ -5,13 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
-import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.PartitionInfo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * TODO：Kafka数据倾斜的情况、Kafka事务(https://www.infoq.cn/article/kafka-analysis-part-8)
@@ -21,87 +21,78 @@ import java.util.List;
  * @author lzhpo
  */
 @Slf4j
-public class FlinkKafkaProducer01<T> extends RichSinkFunction<String> {
+public class FlinkKafkaProducer01<IN> extends RichSinkFunction<HashMap<String, String>> {
 
-  /** topic */
-  private String topic;
+    /**
+     * 序列化
+     */
+    private DeserializationSchema<IN> deserializationSchema;
 
-  /** 需要发送的数据key */
-  private String key;
+    /**
+     * topic
+     */
+    private String topic;
 
-  /** 需要发送的数据value */
-  private String value;
+    /**
+     * KafkaConsumerConfig
+     */
+    private KafkaProducerConfig kafkaProducerConfig;
 
-  /** KafkaConsumerConfig */
-  private KafkaProducerConfig kafkaProducerConfig;
+    /**
+     * Kafka生产者
+     */
+    protected KafkaProducer<String, String> producer;
 
-  /** 序列化 */
-  private DeserializationSchema<T> deserializationSchema;
-
-  /** Kafka生产者 */
-  protected KafkaProducer<String, String> producer;
-
-  public FlinkKafkaProducer01(
-      String topic,
-      String value,
-      KafkaProducerConfig kafkaProducerConfig,
-      DeserializationSchema<T> deserializationSchema) {
-    this.topic = topic;
-    this.value = value;
-    this.kafkaProducerConfig = kafkaProducerConfig;
-    this.deserializationSchema = deserializationSchema;
-  }
-
-  public FlinkKafkaProducer01(
-      String topic,
-      String key,
-      String value,
-      KafkaProducerConfig kafkaProducerConfig,
-      DeserializationSchema<T> deserializationSchema) {
-    this.topic = topic;
-    this.key = key;
-    this.value = value;
-    this.kafkaProducerConfig = kafkaProducerConfig;
-    this.deserializationSchema = deserializationSchema;
-  }
-
-  @Override
-  public void open(Configuration parameters) throws Exception {
-    super.open(parameters);
-    producer = kafkaProducerConfig.createFactory();
-  }
-
-  @Override
-  public void close() throws Exception {
-    super.close();
-    if (producer != null) {
-      producer.close();
+    public FlinkKafkaProducer01(DeserializationSchema<IN> deserializationSchema, String topic, KafkaProducerConfig kafkaProducerConfig) {
+        this.deserializationSchema = deserializationSchema;
+        this.topic = topic;
+        this.kafkaProducerConfig = kafkaProducerConfig;
     }
-  }
 
-  @Override
-  public void invoke(String s, Context context) {
-    ProducerRecord<String, String> msg;
-    if (key == null || "".equals(key)) {
-      msg = new ProducerRecord<>(topic, value);
-    } else {
-      msg = new ProducerRecord<>(topic, key, value);
+    @Override
+    public void open(Configuration parameters) throws Exception {
+        log.info("parameters:{}", parameters);
+        super.open(parameters);
+        producer = kafkaProducerConfig.createFactory();
+        // 列出topic的相关信息
+        List<PartitionInfo> partitionInfos;
+        partitionInfos = producer.partitionsFor(topic);
+        partitionInfos.forEach(System.out::println);
     }
-    producer.send(
-        msg,
-        new Callback() {
-          @Override
-          public void onCompletion(RecordMetadata metadata, Exception exception) {
-            if (exception == null) {
-              log.info("Send [key={},value={}] to {} topic successfully.", key, value, topic);
+
+    @Override
+    public void close() throws Exception {
+        super.close();
+        if (producer != null) {
+            producer.close();
+        }
+    }
+
+    @Override
+    public void invoke(HashMap<String, String> hashMap, Context context) {
+        log.info("hashMap:{}", hashMap);
+        ProducerRecord<String, String> msg;
+        for (Map.Entry<String, String> entry : hashMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (key == null || "".equals(key)) {
+                msg = new ProducerRecord<>(topic, value);
             } else {
-              log.error("Send [key={},value={}] to {} topic fail.", key, value, topic, exception);
+                msg = new ProducerRecord<>(topic, key, value);
             }
-          }
-        });
-    // 列出topic的相关信息
-    List<PartitionInfo> partitionInfos;
-    partitionInfos = producer.partitionsFor(topic);
-    partitionInfos.forEach(System.out::println);
-  }
+            producer.send(
+                    msg,
+                    (metadata, exception) -> {
+                        if (exception == null) {
+                            log.info("Send [key={},value={}] to {} topic successfully.",
+                                    key, value, topic);
+                        } else {
+                            log.error("Send [key={},value={}] to {} topic fail.",
+                                    key, value, topic, exception);
+                        }
+                    }
+            );
+        }
+    }
+
 }

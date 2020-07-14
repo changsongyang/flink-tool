@@ -14,7 +14,7 @@ import java.util.Map;
 @Slf4j
 public class FlinkRedisSink<IN> extends RichSinkFunction<HashMap<String, String>> {
 
-  protected DeserializationSchema<IN> deserializationSchema;
+  private DeserializationSchema<IN> deserializationSchema;
   private final RedisConnectionConfig redisConnectionConfig;
   /** 插入数据过期时间(单位/秒) */
   private int expireSecond;

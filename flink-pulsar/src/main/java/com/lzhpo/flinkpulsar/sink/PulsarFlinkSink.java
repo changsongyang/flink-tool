@@ -2,6 +2,7 @@ package com.lzhpo.flinkpulsar.sink;
 
 import com.lzhpo.common.SendData;
 import com.lzhpo.flinkpulsar.ProducerSinkFactory;
+import com.lzhpo.flinkpulsar.config.PulsarConnectionConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.configuration.Configuration;
@@ -20,13 +21,16 @@ import org.apache.pulsar.client.api.PulsarClientException;
 public class PulsarFlinkSink<T> extends RichSinkFunction<SendData> {
 
   /** pulsar客户端 */
-  PulsarClient pulsarClient;
+  protected PulsarClient pulsarClient;
 
   /** 生产者 */
-  Producer<byte[]> producer;
+  protected Producer<byte[]> producer;
 
   /** 序列化 */
-  DeserializationSchema<T> deserializationSchema;
+  private DeserializationSchema<T> deserializationSchema;
+
+  /** pulsarConnectionConfig */
+  private PulsarConnectionConfig pulsarConnectionConfig;
 
   /**
    * 序列化

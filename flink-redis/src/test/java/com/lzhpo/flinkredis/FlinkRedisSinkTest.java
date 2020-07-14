@@ -40,8 +40,7 @@ public class FlinkRedisSinkTest {
                     .setGroupId("flink-consumer01-test")
                     .setEnableAutoCommit(false)
                     .setKeyDeserializer("org.apache.kafka.common.serialization.StringDeserializer")
-                    .setValueDeserializer(
-                        "org.apache.kafka.common.serialization.StringDeserializer")
+                    .setValueDeserializer("org.apache.kafka.common.serialization.StringDeserializer")
                     .build(),
                 // Java8使用Stream来创建传入Topic的Set集合
                 Stream.of("flink-consumer01-topic").collect(Collectors.toSet())));

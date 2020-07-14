@@ -1,44 +1,66 @@
 package com.lzhpo.flinkmysql.source;
 
-import com.google.gson.Gson;
+import com.lzhpo.flinkkafka.config.KafkaProducerConfig;
+import com.lzhpo.flinkkafka.sink.FlinkKafkaProducer01;
+import com.lzhpo.flinkmysql.config.MysqlConnectionConfig;
+import com.lzhpo.flinkmysql.test.User;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
-/** @author lzhpo */
+/**
+ * 读取MySQL中的数据sink到Kafka
+ *
+ * @author lzhpo
+ */
 public class SourceTest {
 
-  public static void main(String[] args) throws Exception {
-    final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+    public static void main(String[] args) throws Exception {
+        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-    DataStreamSource<ArrayList> dataStreamSource =
-        env.addSource(
-            FlinkMysqlSource.build(new SimpleStringSchema())
-                .setUrl(
-                    "jdbc:mysql://localhost:3306/study-flink?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=CTT&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false")
-                .setUsername("root")
-                .setPassword("123456")
-                .setSql("select id,name,course,score from tb_student;"));
+        DataStreamSource<User> mysqlStream = env.addSource(
+                new FlinkKafkaSourceMysql<>(
+                        new SimpleStringSchema(),
+                        MysqlConnectionConfig.builder()
+                                .setUrl("jdbc:mysql://localhost:3306/study-flink?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=CTT&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false")
+                                .setUsername("root")
+                                .setPassword("123456")
+                                .build()
+                )
+        );
 
-    dataStreamSource
-        .flatMap(
-            new FlatMapFunction<ArrayList, Student>() {
-              @Override
-              public void flatMap(ArrayList value, Collector<Student> collector) throws Exception {
-                System.out.println("value：" + value);
-                value.forEach(
-                    item -> {
-                      Student student = new Gson().fromJson(String.valueOf(item), Student.class);
-                      collector.collect(student);
-                    });
-              }
-            })
-        .print();
+        SingleOutputStreamOperator<HashMap<String, String>> flatMapStream = mysqlStream.flatMap(new FlatMapFunction<User, HashMap<String, String>>() {
+            @Override
+            public void flatMap(User user, Collector<HashMap<String, String>> collector) throws Exception {
+                HashMap<String, String> map = new HashMap<>();
+                map.put(UUID.randomUUID().toString(), user.toString());
+                collector.collect(map);
+            }
+        });
 
-    env.execute("Flink mysql source");
-  }
+        flatMapStream.addSink(
+                new FlinkKafkaProducer01<>(
+                        new SimpleStringSchema(),
+                        "flink-producer01-test",
+                        KafkaProducerConfig.builder()
+                                .setBootstrapServers("192.168.200.109:9092")
+                                .setAcks("all")
+                                .setRetries(0)
+                                .setBatchSize(16384)
+                                .setLingerMs(1)
+                                .setBufferMemory(33554432)
+                                .setKeySerializer("org.apache.kafka.common.serialization.StringSerializer")
+                                .setValueSerializer("org.apache.kafka.common.serialization.StringSerializer")
+                                .build()
+                )
+        );
+
+        env.execute("Flink mysql source");
+    }
 }

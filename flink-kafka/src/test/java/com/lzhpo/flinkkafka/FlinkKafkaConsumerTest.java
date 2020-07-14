@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  *
  * @author lzhpo
  */
-public class ConsumerTest {
+public class FlinkKafkaConsumerTest {
 
   public static void main(String[] args) throws Exception {
     // init env
@@ -41,9 +41,12 @@ public class ConsumerTest {
                 Stream.of("flink-consumer01-topic").collect(Collectors.toSet())));
 
     // transformation操作
-    consumerStreamSource.print().setParallelism(2);
+    consumerStreamSource
+//            .keyBy("timestamp")
+            .print()
+            .setParallelism(2);
 
     // execute
-    env.execute("Flink consumer01 job");
+    env.execute("Flink kafka consumer01 job");
   }
 }
