@@ -17,6 +17,7 @@
         <module>flink-hbase</module>
         <module>flink-hive</module>
         <module>flink-rocketmq</module>
+        <module>serialize</module>
     </modules>
     <packaging>pom</packaging>
 
