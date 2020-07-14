@@ -33,7 +33,9 @@ public class FlinkKafkaSinkHadoop<T> extends RichSinkFunction<byte[]> {
     /** fileSystem，用完要关闭 */
     protected FileSystem fileSystem;
 
-    public FlinkKafkaSinkHadoop(DeserializationSchema<T> deserializationSchema, HadoopConnectionConfig hadoopConnectionConfig, String fileWithPath) {
+    public FlinkKafkaSinkHadoop(DeserializationSchema<T> deserializationSchema,
+                                HadoopConnectionConfig hadoopConnectionConfig,
+                                String fileWithPath) {
         this.deserializationSchema = deserializationSchema;
         this.hadoopConnectionConfig = hadoopConnectionConfig;
         this.fileWithPath = fileWithPath;
