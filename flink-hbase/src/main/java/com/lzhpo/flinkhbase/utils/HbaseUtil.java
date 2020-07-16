@@ -97,27 +97,6 @@ public class HbaseUtil {
     }
 
     /**
-     * TODO：插入数据
-     *
-     * @param tableName        表名
-     * @param rowKey           唯一标识
-     * @param columnFamilyName 列族名
-     * @param pairList         列标识和值的集合
-     */
-    public boolean putRow(String tableName, String rowKey, String columnFamilyName, List<Pair<String, String>> pairList) {
-        try {
-            Table table = connection.getTable(TableName.valueOf(tableName));
-            Put put = new Put(Bytes.toBytes(rowKey));
-            pairList.forEach(pair -> put.addColumn(Bytes.toBytes(columnFamilyName), Bytes.toBytes(pair.getKey()), Bytes.toBytes(pair.getValue())));
-            table.put(put);
-            table.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-    /**
      * 根据 rowKey 获取指定行的数据
      *
      * @param tableName 表名
