@@ -3,7 +3,7 @@ package com.lzhpo.flinkmysql.sink;
 import com.google.gson.Gson;
 import com.lzhpo.common.modeltest.UserModelTest;
 import com.lzhpo.flinkkafka.config.KafkaConsumerConfig;
-import com.lzhpo.flinkkafka.source.FlinkKafkaConsumer01;
+import com.lzhpo.flinkkafka.source.KafkaSource;
 import com.lzhpo.flinkmysql.config.MysqlConnectionConfig;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
@@ -19,7 +19,8 @@ import java.util.stream.Stream;
 /**
  * 读取Kafka中指定的topic数据sink到MySQL
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 public class SinkTest {
 
@@ -29,7 +30,7 @@ public class SinkTest {
         // 添加数据源
         DataStreamSource<ConsumerRecord<String, String>> consumerStreamSource =
                 env.addSource(
-                        new FlinkKafkaConsumer01<>(
+                        new KafkaSource<>(
                                 new SimpleStringSchema(),
                                 KafkaConsumerConfig.builder()
                                         .setBootstrapServers("192.168.200.109:9092")

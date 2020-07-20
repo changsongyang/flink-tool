@@ -5,7 +5,8 @@ import org.junit.Test;
 import redis.clients.jedis.Jedis;
 
 /**
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 public class SetGetValueTest {
 

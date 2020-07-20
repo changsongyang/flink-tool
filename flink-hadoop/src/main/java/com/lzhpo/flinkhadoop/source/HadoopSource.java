@@ -13,15 +13,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Objects;
 
 /**
- * @author lzhpo
+ * Hadoop Source
+ *
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 @Slf4j
-public class FlinkKafkaSourceHadoop<T> extends RichSourceFunction<String> {
+public class HadoopSource<OUT> extends RichSourceFunction<OUT> {
 
-    /** 序列化 */
-    private DeserializationSchema<T> deserializationSchema;
+    /** 反序列化 */
+    private DeserializationSchema<OUT> schema;
 
     /** Hadoop连接工具 */
     private HadoopConnectionConfig hadoopConnectionConfig;
@@ -35,10 +39,10 @@ public class FlinkKafkaSourceHadoop<T> extends RichSourceFunction<String> {
     /** 控制程序运行 */
     protected boolean running = true;
 
-    public FlinkKafkaSourceHadoop(DeserializationSchema<T> deserializationSchema,
-                                  HadoopConnectionConfig hadoopConnectionConfig,
-                                  String fileWithPath) {
-        this.deserializationSchema = deserializationSchema;
+    public HadoopSource(DeserializationSchema<OUT> deserializationSchema,
+                        HadoopConnectionConfig hadoopConnectionConfig,
+                        String fileWithPath) {
+        this.schema = deserializationSchema;
         this.hadoopConnectionConfig = hadoopConnectionConfig;
         this.fileWithPath = fileWithPath;
     }
@@ -50,12 +54,12 @@ public class FlinkKafkaSourceHadoop<T> extends RichSourceFunction<String> {
     }
 
     @Override
-    public void run(SourceContext<String> ctx) throws Exception {
+    public void run(SourceContext<OUT> ctx) throws Exception {
         while (running) {
             FSDataInputStream fsDataInputStream = fileSystem.open(new Path(fileWithPath));
             String readData = inputStreamToString(fsDataInputStream, "UTF-8");
             log.info("readData:{}",readData);
-            ctx.collect(readData);
+            ctx.collect(schema.deserialize(Objects.requireNonNull(readData).getBytes()));
         }
     }
 

@@ -15,7 +15,8 @@ import java.util.concurrent.ExecutionException;
 /**
  * Flink使用Pulsar作为数据源
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 @Slf4j
 public class PulsarFlinkSource<T> extends RichSourceFunction<byte[]> {

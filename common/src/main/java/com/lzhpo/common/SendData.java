@@ -8,7 +8,8 @@ import java.util.Date;
 /**
  * 发送的消息数据
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 @Data
 public class SendData implements Serializable {

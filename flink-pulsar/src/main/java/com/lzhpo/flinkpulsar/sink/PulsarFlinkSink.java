@@ -15,7 +15,8 @@ import org.apache.pulsar.client.api.PulsarClientException;
 /**
  * Pulsar Flink Sink
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 @Slf4j
 public class PulsarFlinkSink<T> extends RichSinkFunction<SendData> {

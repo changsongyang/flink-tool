@@ -9,7 +9,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Pulsar生产者、消费者连接
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 public class PulsarConnectionConfig<T> extends BaseFactory<T> {
 

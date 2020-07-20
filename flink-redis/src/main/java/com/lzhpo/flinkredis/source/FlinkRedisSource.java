@@ -10,7 +10,8 @@ import redis.clients.jedis.Jedis;
 import java.util.HashMap;
 
 /**
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 public class FlinkRedisSource<IN> extends RichSourceFunction<HashMap<String, String>> {
 

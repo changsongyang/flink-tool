@@ -12,7 +12,8 @@ import java.util.Random;
 /**
  * Flink Pulsar Sink Test
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 public class SinkTest {
 

@@ -6,7 +6,8 @@ import java.io.Serializable;
 
 /**
  * 测试
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 @Data
 public class UserModelTest implements Serializable {

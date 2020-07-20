@@ -6,7 +6,8 @@ import org.apache.pulsar.client.api.PulsarClientException;
 /**
  * Pulsar抽象连接工厂
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 public abstract class BasePulsarFactory<T> {
 

@@ -5,7 +5,8 @@ import com.lzhpo.common.SendData;
 /**
  * 生产者相关参数配置
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 public class ProducerConfigConstant {
 

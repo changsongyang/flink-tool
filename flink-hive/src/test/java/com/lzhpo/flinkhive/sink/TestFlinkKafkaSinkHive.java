@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.lzhpo.common.modeltest.UserModelTest;
 import com.lzhpo.flinkhive.config.HiveConnectionConfig;
 import com.lzhpo.flinkkafka.config.KafkaConsumerConfig;
-import com.lzhpo.flinkkafka.source.FlinkKafkaConsumer01;
+import com.lzhpo.flinkkafka.source.KafkaSource;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -28,7 +28,7 @@ public class TestFlinkKafkaSinkHive {
         // 添加数据源
         DataStreamSource<ConsumerRecord<String, String>> consumerStreamSource =
                 env.addSource(
-                        new FlinkKafkaConsumer01<>(
+                        new KafkaSource<>(
                                 new SimpleStringSchema(),
                                 KafkaConsumerConfig.builder()
                                         .setBootstrapServers("192.168.200.109:9092")
@@ -51,7 +51,7 @@ public class TestFlinkKafkaSinkHive {
 
         // sink
         flatMapStream.addSink(
-                new FlinkKafkaSinkHive<>(
+                new HiveSink<>(
                         new SimpleStringSchema(),
                         HiveConnectionConfig.builder()
                                 .setDriverName("org.apache.hive.jdbc.HiveDriver")

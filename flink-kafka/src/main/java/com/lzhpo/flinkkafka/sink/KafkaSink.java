@@ -2,31 +2,28 @@ package com.lzhpo.flinkkafka.sink;
 
 import com.lzhpo.flinkkafka.config.KafkaProducerConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.flink.api.common.serialization.DeserializationSchema;
+import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.PartitionInfo;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * TODO：Kafka数据倾斜的情况、Kafka事务(https://www.infoq.cn/article/kafka-analysis-part-8)
  *
  * <p>https://blog.csdn.net/learn_tech/article/details/80923308
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 @Slf4j
-public class FlinkKafkaProducer01<IN> extends RichSinkFunction<HashMap<String, String>> {
+public class KafkaSink<IN> extends RichSinkFunction<IN> {
 
-    /**
-     * 序列化
-     */
-    private DeserializationSchema<IN> deserializationSchema;
+    /** 序列化 */
+    private SerializationSchema<IN> schema;
 
     /**
      * topic
@@ -43,8 +40,9 @@ public class FlinkKafkaProducer01<IN> extends RichSinkFunction<HashMap<String, S
      */
     protected KafkaProducer<String, String> producer;
 
-    public FlinkKafkaProducer01(DeserializationSchema<IN> deserializationSchema, String topic, KafkaProducerConfig kafkaProducerConfig) {
-        this.deserializationSchema = deserializationSchema;
+    public KafkaSink(SerializationSchema<IN> serializationSchema,
+                     String topic, KafkaProducerConfig kafkaProducerConfig) {
+        this.schema = serializationSchema;
         this.topic = topic;
         this.kafkaProducerConfig = kafkaProducerConfig;
     }
@@ -69,30 +67,17 @@ public class FlinkKafkaProducer01<IN> extends RichSinkFunction<HashMap<String, S
     }
 
     @Override
-    public void invoke(HashMap<String, String> hashMap, Context context) {
-        log.info("hashMap:{}", hashMap);
-        ProducerRecord<String, String> msg;
-        for (Map.Entry<String, String> entry : hashMap.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if (key == null || "".equals(key)) {
-                msg = new ProducerRecord<>(topic, value);
-            } else {
-                msg = new ProducerRecord<>(topic, key, value);
-            }
-            producer.send(
-                    msg,
-                    (metadata, exception) -> {
-                        if (exception == null) {
-                            log.info("Send [key={},value={}] to {} topic successfully.",
-                                    key, value, topic);
-                        } else {
-                            log.error("Send [key={},value={}] to {} topic fail.",
-                                    key, value, topic, exception);
-                        }
+    public void invoke(IN value, Context context) {
+        producer.send(
+                new ProducerRecord<>(topic, new String(schema.serialize(value))),
+                (metadata, exception) -> {
+                    if (exception == null) {
+                        log.info("send data [{}] to rabbitmq successfully.", value);
+                    } else {
+                        log.error("send data [{}] to rabbitmq failed.", value, exception);
                     }
-            );
-        }
+                }
+        );
     }
 
 }

@@ -9,7 +9,8 @@ import java.util.Properties;
 /**
  * Kafka consumer config
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 public class KafkaConsumerConfig extends BaseFactory<Consumer<String, String>> {
 

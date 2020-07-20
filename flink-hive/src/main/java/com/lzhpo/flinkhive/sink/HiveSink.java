@@ -1,9 +1,8 @@
 package com.lzhpo.flinkhive.sink;
 
-import com.lzhpo.common.modeltest.UserModelTest;
 import com.lzhpo.flinkhive.config.HiveConnectionConfig;
 import com.lzhpo.flinkhive.utils.MyHiveUtil;
-import org.apache.flink.api.common.serialization.DeserializationSchema;
+import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 
@@ -13,16 +12,18 @@ import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
  * @author Zhaopo Liu
  * @date 2020/7/20 14:37
  */
-public class FlinkKafkaSinkHive<T> extends RichSinkFunction<UserModelTest> {
+public class HiveSink<IN> extends RichSinkFunction<IN> {
 
-    private DeserializationSchema<T> deserializationSchema;
+    /** 序列化 */
+    private SerializationSchema<IN> schema;
+
     private HiveConnectionConfig hiveConnectionConfig;
 
     protected MyHiveUtil hiveUtil;
 
-    public FlinkKafkaSinkHive(DeserializationSchema<T> deserializationSchema,
-                              HiveConnectionConfig hiveConnectionConfig) {
-        this.deserializationSchema = deserializationSchema;
+    public HiveSink(SerializationSchema<IN> serializationSchema,
+                    HiveConnectionConfig hiveConnectionConfig) {
+        this.schema = serializationSchema;
         this.hiveConnectionConfig = hiveConnectionConfig;
     }
 
@@ -39,7 +40,7 @@ public class FlinkKafkaSinkHive<T> extends RichSinkFunction<UserModelTest> {
     }
 
     @Override
-    public void invoke(UserModelTest value, Context context) throws Exception {
+    public void invoke(IN value, Context context) throws Exception {
 
     }
 }

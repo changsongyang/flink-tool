@@ -2,7 +2,7 @@ package com.lzhpo.flinkhadoop.sink;
 
 import com.lzhpo.flinkhadoop.config.HadoopConnectionConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.flink.api.common.serialization.DeserializationSchema;
+import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -10,13 +10,16 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
 /**
- * @author lzhpo
+ * Hadoop Sink
+ *
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 @Slf4j
-public class FlinkKafkaSinkHadoop<T> extends RichSinkFunction<byte[]> {
+public class HadoopSink<IN> extends RichSinkFunction<IN> {
 
     /** 序列化 */
-    private DeserializationSchema<T> deserializationSchema;
+    private SerializationSchema<IN> schema;
 
     /** Hadoop连接工具 */
     private HadoopConnectionConfig hadoopConnectionConfig;
@@ -33,20 +36,20 @@ public class FlinkKafkaSinkHadoop<T> extends RichSinkFunction<byte[]> {
     /** fileSystem，用完要关闭 */
     protected FileSystem fileSystem;
 
-    public FlinkKafkaSinkHadoop(DeserializationSchema<T> deserializationSchema,
-                                HadoopConnectionConfig hadoopConnectionConfig,
-                                String fileWithPath) {
-        this.deserializationSchema = deserializationSchema;
+    public HadoopSink(SerializationSchema<IN> serializationSchema,
+                      HadoopConnectionConfig hadoopConnectionConfig,
+                      String fileWithPath) {
+        this.schema = serializationSchema;
         this.hadoopConnectionConfig = hadoopConnectionConfig;
         this.fileWithPath = fileWithPath;
     }
 
-    public FlinkKafkaSinkHadoop(DeserializationSchema<T> deserializationSchema,
-                                HadoopConnectionConfig hadoopConnectionConfig,
-                                String fileWithPath,
-                                boolean overwrite,
-                                Integer cacheSize) {
-        this.deserializationSchema = deserializationSchema;
+    public HadoopSink(SerializationSchema<IN> serializationSchema,
+                      HadoopConnectionConfig hadoopConnectionConfig,
+                      String fileWithPath,
+                      boolean overwrite,
+                      Integer cacheSize) {
+        this.schema = serializationSchema;
         this.hadoopConnectionConfig = hadoopConnectionConfig;
         this.fileWithPath = fileWithPath;
         this.overwrite = overwrite;
@@ -69,14 +72,12 @@ public class FlinkKafkaSinkHadoop<T> extends RichSinkFunction<byte[]> {
     }
 
     @Override
-    public void invoke(byte[] bytes, Context context) throws Exception {
+    public void invoke(IN value, Context context) throws Exception {
         FSDataOutputStream fsDataOutputStream = fileSystem.create(
                 new Path(fileWithPath), overwrite, cacheSize);
         // 数据写入到hdfs
-        fsDataOutputStream.write(bytes);
+        fsDataOutputStream.write(schema.serialize(value));
         // 强制将缓冲区的内容刷出
         fsDataOutputStream.flush();
-        // 用完关闭连接
-        close();
     }
 }

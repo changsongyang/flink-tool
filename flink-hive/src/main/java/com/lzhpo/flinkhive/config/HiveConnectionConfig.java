@@ -7,7 +7,8 @@ import java.sql.*;
 /**
  * HiveConnectionConfig
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 public class HiveConnectionConfig extends BaseFactory<Connection> {
 

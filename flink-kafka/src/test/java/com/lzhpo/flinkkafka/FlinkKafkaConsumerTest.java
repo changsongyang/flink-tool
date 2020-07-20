@@ -1,7 +1,7 @@
 package com.lzhpo.flinkkafka;
 
 import com.lzhpo.flinkkafka.config.KafkaConsumerConfig;
-import com.lzhpo.flinkkafka.source.FlinkKafkaConsumer01;
+import com.lzhpo.flinkkafka.source.KafkaSource;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -16,7 +16,8 @@ import java.util.stream.Stream;
  *
  * <p>kafka-console-producer.sh --broker-list 192.168.200.109:9092 --topic flink-consumer01-topic
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 public class FlinkKafkaConsumerTest {
 
@@ -27,7 +28,7 @@ public class FlinkKafkaConsumerTest {
     // 添加数据源
     DataStreamSource<ConsumerRecord<String, String>> consumerStreamSource =
         env.addSource(
-            new FlinkKafkaConsumer01<>(
+            new KafkaSource<>(
                 new SimpleStringSchema(),
                 KafkaConsumerConfig.builder()
                     .setBootstrapServers("192.168.200.109:9092")

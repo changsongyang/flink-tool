@@ -2,25 +2,28 @@ package com.lzhpo.flinkhbase.sink;
 
 import com.lzhpo.flinkhbase.config.HbaseConnectionConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.flink.api.common.serialization.DeserializationSchema;
+import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.hadoop.hbase.client.Connection;
 
 /**
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 @Slf4j
-public class FlinkKafkaSinkHbase<T> extends RichSinkFunction<String> {
+public class HbaseSink<IN> extends RichSinkFunction<IN> {
 
-    private DeserializationSchema<T> deserializationSchema;
+    /** 序列化 */
+    private SerializationSchema<IN> schema;
+
     private HbaseConnectionConfig hbaseConnectionConfig;
 
     protected Connection connection;
 
-    public FlinkKafkaSinkHbase(DeserializationSchema<T> deserializationSchema,
-                               HbaseConnectionConfig hbaseConnectionConfig) {
-        this.deserializationSchema = deserializationSchema;
+    public HbaseSink(SerializationSchema<IN> serializationSchema,
+                     HbaseConnectionConfig hbaseConnectionConfig) {
+        this.schema = serializationSchema;
         this.hbaseConnectionConfig = hbaseConnectionConfig;
     }
 
@@ -39,7 +42,7 @@ public class FlinkKafkaSinkHbase<T> extends RichSinkFunction<String> {
     }
 
     @Override
-    public void invoke(String value, Context context) throws Exception {
+    public void invoke(IN value, Context context) throws Exception {
 
     }
 }

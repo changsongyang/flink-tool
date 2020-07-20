@@ -13,7 +13,8 @@ import java.io.*;
 /**
  * 封装的HDFS操作工具
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 @Slf4j
 public class HadoopUtil {

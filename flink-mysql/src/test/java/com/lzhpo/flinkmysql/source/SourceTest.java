@@ -2,7 +2,7 @@ package com.lzhpo.flinkmysql.source;
 
 import com.lzhpo.common.modeltest.UserModelTest;
 import com.lzhpo.flinkkafka.config.KafkaProducerConfig;
-import com.lzhpo.flinkkafka.sink.FlinkKafkaProducer01;
+import com.lzhpo.flinkkafka.sink.KafkaSink;
 import com.lzhpo.flinkmysql.config.MysqlConnectionConfig;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
@@ -17,7 +17,8 @@ import java.util.UUID;
 /**
  * 读取MySQL中的数据sink到Kafka
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 public class SourceTest {
 
@@ -45,7 +46,7 @@ public class SourceTest {
         });
 
         flatMapStream.addSink(
-                new FlinkKafkaProducer01<>(
+                new KafkaSink<>(
                         new SimpleStringSchema(),
                         "flink-producer01-test",
                         KafkaProducerConfig.builder()

@@ -13,7 +13,8 @@ import java.sql.PreparedStatement;
 /**
  * Flink MySQL Sink
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 @Slf4j
 public class FlinkKafkaSinkMysql<T> extends RichSinkFunction<UserModelTest> {

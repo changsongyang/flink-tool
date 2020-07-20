@@ -13,7 +13,8 @@ import java.sql.ResultSet;
 /**
  * 从MySQL中读取数据
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 public class FlinkKafkaSourceMysql<T> extends RichSourceFunction<UserModelTest> {
 

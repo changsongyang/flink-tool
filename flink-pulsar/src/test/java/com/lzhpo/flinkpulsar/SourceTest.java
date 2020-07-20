@@ -11,7 +11,8 @@ import java.util.Arrays;
 /**
  * Flink Pulsar Test
  *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 public class SourceTest {
 

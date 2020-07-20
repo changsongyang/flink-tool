@@ -10,7 +10,8 @@ import org.apache.hadoop.hbase.client.ConnectionFactory;
 import java.io.IOException;
 
 /**
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/6/20 03:14
  */
 @Slf4j
 public class HbaseConnectionConfig extends BaseFactory<Connection> {
