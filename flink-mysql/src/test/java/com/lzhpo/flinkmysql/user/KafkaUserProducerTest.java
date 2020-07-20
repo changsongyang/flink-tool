@@ -1,9 +1,10 @@
 package com.lzhpo.flinkmysql.user;
 
 import com.google.gson.Gson;
-import com.lzhpo.flinkmysql.test.User;
+import com.lzhpo.common.modeltest.UserModelTest;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+
 import java.util.Properties;
 
 /**
@@ -23,7 +24,7 @@ public class KafkaUserProducerTest {
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
 
         while(true) {
-            User user = User.builder()
+            UserModelTest user = UserModelTest.builder()
                     .setId((long) (1+Math.random()*(100000000-1+1)))
                     .setName("lzhpo" + (1+Math.random()*(100-1+1)))
                     .setLocation("广州" + (1+Math.random()*(100-1+1)))

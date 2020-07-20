@@ -1,10 +1,10 @@
 package com.lzhpo.flinkmysql.sink;
 
 import com.google.gson.Gson;
+import com.lzhpo.common.modeltest.UserModelTest;
 import com.lzhpo.flinkkafka.config.KafkaConsumerConfig;
 import com.lzhpo.flinkkafka.source.FlinkKafkaConsumer01;
 import com.lzhpo.flinkmysql.config.MysqlConnectionConfig;
-import com.lzhpo.flinkmysql.test.User;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -42,10 +42,10 @@ public class SinkTest {
                                 Stream.of("flink-mysql-sink-topic").collect(Collectors.toSet())));
 
         // transformation
-        SingleOutputStreamOperator<User> flatMapStream = consumerStreamSource.flatMap(new FlatMapFunction<ConsumerRecord<String, String>, User>() {
+        SingleOutputStreamOperator<UserModelTest> flatMapStream = consumerStreamSource.flatMap(new FlatMapFunction<ConsumerRecord<String, String>, UserModelTest>() {
             @Override
-            public void flatMap(ConsumerRecord<String, String> value, Collector<User> collector) throws Exception {
-                User user = new Gson().fromJson(value.value(), User.class);
+            public void flatMap(ConsumerRecord<String, String> value, Collector<UserModelTest> collector) throws Exception {
+                UserModelTest user = new Gson().fromJson(value.value(), UserModelTest.class);
                 collector.collect(user);
             }
         });

@@ -1,9 +1,9 @@
 package com.lzhpo.flinkmysql.source;
 
+import com.lzhpo.common.modeltest.UserModelTest;
 import com.lzhpo.flinkkafka.config.KafkaProducerConfig;
 import com.lzhpo.flinkkafka.sink.FlinkKafkaProducer01;
 import com.lzhpo.flinkmysql.config.MysqlConnectionConfig;
-import com.lzhpo.flinkmysql.test.User;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -24,7 +24,7 @@ public class SourceTest {
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        DataStreamSource<User> mysqlStream = env.addSource(
+        DataStreamSource<UserModelTest> mysqlStream = env.addSource(
                 new FlinkKafkaSourceMysql<>(
                         new SimpleStringSchema(),
                         MysqlConnectionConfig.builder()
@@ -35,9 +35,9 @@ public class SourceTest {
                 )
         );
 
-        SingleOutputStreamOperator<HashMap<String, String>> flatMapStream = mysqlStream.flatMap(new FlatMapFunction<User, HashMap<String, String>>() {
+        SingleOutputStreamOperator<HashMap<String, String>> flatMapStream = mysqlStream.flatMap(new FlatMapFunction<UserModelTest, HashMap<String, String>>() {
             @Override
-            public void flatMap(User user, Collector<HashMap<String, String>> collector) throws Exception {
+            public void flatMap(UserModelTest user, Collector<HashMap<String, String>> collector) throws Exception {
                 HashMap<String, String> map = new HashMap<>();
                 map.put(UUID.randomUUID().toString(), user.toString());
                 collector.collect(map);
