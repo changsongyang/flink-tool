@@ -1,10 +1,10 @@
-package com.lzhpo.flinkmysql.sink;
+package com.lzhpo.flinkhive.sink;
 
 import com.google.gson.Gson;
+import com.lzhpo.common.modeltest.UserModelTest;
+import com.lzhpo.flinkhive.config.HiveConnectionConfig;
 import com.lzhpo.flinkkafka.config.KafkaConsumerConfig;
 import com.lzhpo.flinkkafka.source.FlinkKafkaConsumer01;
-import com.lzhpo.flinkmysql.config.MysqlConnectionConfig;
-import com.lzhpo.flinkmysql.test.User;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -17,11 +17,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 读取Kafka中指定的topic数据sink到MySQL
- *
- * @author lzhpo
+ * @author Zhaopo Liu
+ * @date 2020/7/20 14:52
  */
-public class SinkTest {
+public class TestFlinkKafkaSinkHive {
 
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -42,26 +41,28 @@ public class SinkTest {
                                 Stream.of("flink-mysql-sink-topic").collect(Collectors.toSet())));
 
         // transformation
-        SingleOutputStreamOperator<User> flatMapStream = consumerStreamSource.flatMap(new FlatMapFunction<ConsumerRecord<String, String>, User>() {
+        SingleOutputStreamOperator<UserModelTest> flatMapStream = consumerStreamSource.flatMap(new FlatMapFunction<ConsumerRecord<String, String>, UserModelTest>() {
             @Override
-            public void flatMap(ConsumerRecord<String, String> value, Collector<User> collector) throws Exception {
-                User user = new Gson().fromJson(value.value(), User.class);
+            public void flatMap(ConsumerRecord<String, String> value, Collector<UserModelTest> collector) throws Exception {
+                UserModelTest user = new Gson().fromJson(value.value(), UserModelTest.class);
                 collector.collect(user);
             }
         });
 
         // sink
         flatMapStream.addSink(
-                new FlinkKafkaSinkMysql<>(
+                new FlinkKafkaSinkHive<>(
                         new SimpleStringSchema(),
-                        MysqlConnectionConfig.builder()
-                                .setUrl("jdbc:mysql://localhost:3306/study-flink?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=CTT&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false")
+                        HiveConnectionConfig.builder()
+                                .setDriverName("org.apache.hive.jdbc.HiveDriver")
+                                .setUrl("jdbc:hive2://localhost:10000/db_comprs")
                                 .setUsername("root")
                                 .setPassword("123456")
                                 .build()
                 )
         );
 
-        env.execute("Flink sink mysql job");
+        env.execute("Flink kafka sink hive job");
     }
+
 }

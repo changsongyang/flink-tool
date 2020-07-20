@@ -1,7 +1,7 @@
 package com.lzhpo.flinkmysql.source;
 
+import com.lzhpo.common.modeltest.UserModelTest;
 import com.lzhpo.flinkmysql.config.MysqlConnectionConfig;
-import com.lzhpo.flinkmysql.test.User;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
@@ -15,7 +15,7 @@ import java.sql.ResultSet;
  *
  * @author lzhpo
  */
-public class FlinkKafkaSourceMysql<T> extends RichSourceFunction<User> {
+public class FlinkKafkaSourceMysql<T> extends RichSourceFunction<UserModelTest> {
 
     private PreparedStatement ps;
     private Connection connection;
@@ -40,12 +40,12 @@ public class FlinkKafkaSourceMysql<T> extends RichSourceFunction<User> {
     }
 
     @Override
-    public void run(SourceContext<User> ctx) throws Exception {
+    public void run(SourceContext<UserModelTest> ctx) throws Exception {
         while (running) {
             ResultSet resultSet = ps.executeQuery();
             //处理结果集
             while (resultSet.next()) {
-                User user = User.builder()
+                UserModelTest user = UserModelTest.builder()
                         .setId(resultSet.getLong("id"))
                         .setName(resultSet.getString("name").trim())
                         .setLocation(resultSet.getString("location").trim())

@@ -1,7 +1,7 @@
 package com.lzhpo.flinkmysql.sink;
 
+import com.lzhpo.common.modeltest.UserModelTest;
 import com.lzhpo.flinkmysql.config.MysqlConnectionConfig;
-import com.lzhpo.flinkmysql.test.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.configuration.Configuration;
@@ -16,7 +16,7 @@ import java.sql.PreparedStatement;
  * @author lzhpo
  */
 @Slf4j
-public class FlinkKafkaSinkMysql<T> extends RichSinkFunction<User> {
+public class FlinkKafkaSinkMysql<T> extends RichSinkFunction<UserModelTest> {
 
     protected PreparedStatement ps;
     protected Connection conn;
@@ -57,7 +57,7 @@ public class FlinkKafkaSinkMysql<T> extends RichSinkFunction<User> {
     }
 
     @Override
-    public void invoke(User user, Context context) throws Exception {
+    public void invoke(UserModelTest user, Context context) throws Exception {
         ps.setLong(1, user.getId());
         ps.setString(2, user.getName());
         ps.setString(3, user.getLocation());

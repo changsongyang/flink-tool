@@ -1,4 +1,4 @@
-package com.lzhpo.flinkmysql.test;
+package com.lzhpo.common.modeltest;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author lzhpo
  */
 @Data
-public class User implements Serializable {
+public class UserModelTest implements Serializable {
     private Long id;
     private String name;
     private String location;
@@ -24,10 +24,10 @@ public class User implements Serializable {
     }
 
     public static class Builder {
-        private User user;
+        private UserModelTest user;
 
         public Builder() {
-            user = new User();
+            user = new UserModelTest();
         }
 
         public Builder setId(Long id) {
@@ -45,7 +45,7 @@ public class User implements Serializable {
             return this;
         }
 
-        public User build() {
+        public UserModelTest build() {
             return user;
         }
     }
