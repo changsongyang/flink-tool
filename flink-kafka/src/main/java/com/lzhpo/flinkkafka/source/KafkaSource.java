@@ -3,6 +3,8 @@ package com.lzhpo.flinkkafka.source;
 import com.lzhpo.flinkkafka.config.KafkaConsumerConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.java.typeutils.ResultTypeQueryable;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -19,7 +21,7 @@ import java.util.Set;
  * @date 2020/6/20 03:14
  */
 @Slf4j
-public class KafkaSource<OUT> extends RichSourceFunction<OUT> {
+public class KafkaSource<OUT> extends RichSourceFunction<OUT> implements ResultTypeQueryable<OUT> {
 
     /**
      * Kafka消费者
@@ -119,5 +121,15 @@ public class KafkaSource<OUT> extends RichSourceFunction<OUT> {
     public void cancel() {
         running = false;
         log.info("Flink job already cancel!");
+    }
+
+    /**
+     * 获取反序列化的值的数据类型
+     *
+     * @return The data type produced by this function or input format.
+     */
+    @Override
+    public TypeInformation<OUT> getProducedType() {
+        return schema.getProducedType();
     }
 }

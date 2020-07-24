@@ -7,15 +7,13 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 import redis.clients.jedis.Jedis;
 
-import java.util.HashMap;
-
 /**
  * @author Zhaopo Liu
  * @date 2020/6/20 03:14
  */
-public class FlinkRedisSource<IN> extends RichSourceFunction<HashMap<String, String>> {
+public class FlinkRedisSource<IN> extends RichSourceFunction<IN> {
 
-    private DeserializationSchema<IN> deserializationSchema;
+    private DeserializationSchema<IN> schema;
     private RedisConnectionConfig redisConnectionConfig;
 
     /** get redis data key */
@@ -28,7 +26,7 @@ public class FlinkRedisSource<IN> extends RichSourceFunction<HashMap<String, Str
 
     public FlinkRedisSource(DeserializationSchema<IN> deserializationSchema,
                             RedisConnectionConfig redisConnectionConfig, String key) {
-        this.deserializationSchema = deserializationSchema;
+        this.schema = deserializationSchema;
         this.redisConnectionConfig = redisConnectionConfig;
         this.key = key;
     }
@@ -54,13 +52,12 @@ public class FlinkRedisSource<IN> extends RichSourceFunction<HashMap<String, Str
      * @throws Exception
      */
     @Override
-    public void run(SourceContext<HashMap<String, String>> ctx) throws Exception {
-        String result = jedis.get(key);
-        if (StringUtils.isNotEmpty(result) && running) {
+    public void run(SourceContext<IN> ctx) throws Exception {
+        String dataKey  = jedis.get(key);
+        if (StringUtils.isNotEmpty(dataKey) && running) {
             try {
-                HashMap<String, String> hashMap = new HashMap<>(1);
-                hashMap.put(key, result);
-                ctx.collect(hashMap);
+                IN result = schema.deserialize(dataKey.getBytes());
+                ctx.collect(result);
             } finally {
                 running = false;
             }

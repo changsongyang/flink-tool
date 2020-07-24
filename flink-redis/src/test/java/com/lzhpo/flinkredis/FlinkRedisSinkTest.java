@@ -3,7 +3,7 @@ package com.lzhpo.flinkredis;
 import com.lzhpo.flinkkafka.config.KafkaConsumerConfig;
 import com.lzhpo.flinkkafka.source.KafkaSource;
 import com.lzhpo.flinkredis.config.RedisConnectionConfig;
-import com.lzhpo.flinkredis.sink.FlinkRedisSink;
+import com.lzhpo.flinkredis.sink.RedisSink;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -65,7 +65,7 @@ public class FlinkRedisSinkTest {
     // sink to redis
     flatMapStream
         .addSink(
-            new FlinkRedisSink<>(
+            new RedisSink<>(
                 new SimpleStringSchema(),
                 RedisConnectionConfig.builder()
                     .setRedisUrl("192.168.200.109")
