@@ -1,7 +1,7 @@
 package com.lzhpo.flinkredis;
 
 import com.lzhpo.flinkkafka.config.KafkaConsumerConfig;
-import com.lzhpo.flinkkafka.source.FkConsumer;
+import com.lzhpo.flinkkafka.source.FKConsumer;
 import com.lzhpo.flinkredis.config.RedisConnectionConfig;
 import com.lzhpo.flinkredis.sink.RedisSink;
 import org.apache.flink.api.common.functions.FlatMapFunction;
@@ -34,7 +34,7 @@ public class FlinkRedisSinkTest {
     // 添加数据源
     DataStreamSource<ConsumerRecord<String, String>> consumerStreamSource =
         env.addSource(
-            new FkConsumer<>(
+            new FKConsumer<>(
                 new SimpleStringSchema(),
                 KafkaConsumerConfig.builder()
                     .setBootstrapServers("192.168.200.109:9092")

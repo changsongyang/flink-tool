@@ -24,7 +24,7 @@ import java.util.List;
  * @date 2020/6/20 03:14
  */
 @Slf4j
-public class FkProducer<IN> extends RichSinkFunction<IN> {
+public class FKProducer<IN> extends RichSinkFunction<IN> {
 
     /** 序列化 */
     private SerializationSchema<IN> schema;
@@ -41,7 +41,7 @@ public class FkProducer<IN> extends RichSinkFunction<IN> {
     /** Kafka生产者 {@link KafkaProducer} */
     protected KafkaProducer<String, String> producer;
 
-    public FkProducer(SerializationSchema<IN> schema, String key,
+    public FKProducer(SerializationSchema<IN> schema, String key,
                       String topic, KafkaProducerConfig kafkaProducerConfig) {
         this.schema = schema;
         this.key = key;

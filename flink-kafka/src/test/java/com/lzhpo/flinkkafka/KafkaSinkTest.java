@@ -1,7 +1,7 @@
 package com.lzhpo.flinkkafka;
 
 import com.lzhpo.flinkkafka.config.KafkaProducerConfig;
-import com.lzhpo.flinkkafka.sink.FkProducer;
+import com.lzhpo.flinkkafka.sink.FKProducer;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -28,7 +28,7 @@ public class KafkaSinkTest {
 
         // sink
         dataStreamSource.addSink(
-                new FkProducer<>(
+                new FKProducer<>(
                         new SimpleStringSchema(),
                         UUID.randomUUID().toString(),
                         "kafka_sink_test",

@@ -1,13 +1,13 @@
 package com.lzhpo.flinkpulsar;
 
-import com.lzhpo.common.SendData;
-import com.lzhpo.flinkpulsar.sink.PulsarFlinkSink;
+import com.lzhpo.flinkpulsar.config.PulsarProducerConfig;
+import com.lzhpo.flinkpulsar.sink.FlinkPulsarProducer;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
-import java.util.Date;
-import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Flink Pulsar Sink Test
@@ -17,33 +17,28 @@ import java.util.Random;
  */
 public class SinkTest {
 
-  public static void main(String[] args) throws Exception {
-    final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+    public static void main(String[] args) throws Exception {
+        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-    // 消息内容
-    SendData sendData =
-        SendData.builder()
-            .id(new Random().nextLong())
-            .body("Hello,lzhpo")
-            .createDate(new Date())
-            .creator("lzhpo")
-            .builded();
+        // env.fromElements将一系列元素作为数据源
+        DataStreamSource<String> dataStreamSource = env.fromCollection(
+                Stream.of("666666666", "9999999", "HelloWorld!").collect(Collectors.toList()));
 
-    // env.fromElements将一系列元素作为数据源
-    DataStreamSource<SendData> dataStreamSource = env.fromElements(sendData);
+        dataStreamSource.addSink(
+                new FlinkPulsarProducer<>(
+                        new SimpleStringSchema(),
+                        PulsarProducerConfig.builder()
+                                .setPulsarUrl("pulsar://localhost:6650")
+//                                .setPulsarToken("123")
+                                .setTopic("default-test-topic")
+                                .setBatchingMaxPublishDelay(10)
+                                .setSendTimeout(10)
+                                .setBlockIfQueueFull(true)
+                                .build(),
+                        true
+                )
+        );
 
-    PulsarFlinkSink<String> pulsarFlinkSink =
-        PulsarFlinkSink.builder(new SimpleStringSchema())
-            .setPulsarServerUrl("pulsar://192.168.200.109:6650")
-            .setTopic("topic1")
-            .setBatchingMaxPublishDelay(10)
-            .setSendTimeout(10)
-            // 发送一条消息的时候要同步发送
-            .setSendAndClose(true)
-            .setSendData(sendData);
-
-    dataStreamSource.addSink(pulsarFlinkSink).setParallelism(2);
-
-    env.execute("Flink pulsar flink sink");
-  }
+        env.execute("Flink pulsar flink sink");
+    }
 }

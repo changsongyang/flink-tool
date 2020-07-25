@@ -1,12 +1,11 @@
 package com.lzhpo.flinkpulsar;
 
-import com.lzhpo.flinkpulsar.source.PulsarFlinkSource;
-import org.apache.flink.api.common.functions.FlatMapFunction;
+import com.lzhpo.flinkpulsar.config.PulsarConsumerConfig;
+import com.lzhpo.flinkpulsar.source.FlinkPulsarConsumer;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
+import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.util.Collector;
-
-import java.util.Arrays;
+import org.apache.pulsar.client.api.SubscriptionType;
 
 /**
  * Flink Pulsar Test
@@ -16,34 +15,28 @@ import java.util.Arrays;
  */
 public class SourceTest {
 
-  public static void main(String[] args) throws Exception {
-    final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+    public static void main(String[] args) throws Exception {
+        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-    PulsarFlinkSource<String> builder =
-        PulsarFlinkSource.builder(new SimpleStringSchema())
-            .setPulsarServerUrl("pulsar://192.168.200.109:6650")
-            .setTopic("topic1")
-            .setSubscriptionName("test-sub");
+        DataStreamSource<String> dataStreamSource = env.addSource(
+                new FlinkPulsarConsumer<>(
+                        new SimpleStringSchema(),
+                        PulsarConsumerConfig.builder()
+                                .setPulsarUrl("pulsar://localhost:6650")
+//                                .setPulsarToken("123")
+                                .setTopic("default-test-topic")
+                                .setAckTimeout(10)
+                                .setSubscriptionName("default-test-sub")
+                                .setSubscriptionType(SubscriptionType.Exclusive)
+                                .build(),
+                        true
+                )
+        );
 
-    env.addSource(builder)
-        .flatMap(
-            new FlatMapFunction<byte[], String>() {
-              @Override
-              public void flatMap(byte[] value, Collector<String> out) throws Exception {
-                System.out.println("value: " + value);
-                String lines = new String(value);
-                System.out.println("lines: " + lines);
-                String[] split = lines.split(",");
-                System.out.println("split：" + Arrays.toString(split));
-                for (String line : split) {
-                  System.out.println("line: " + line);
-                  out.collect(line);
-                }
-              }
-            })
-        .print()
-        .setParallelism(2);
+        dataStreamSource
+                .print()
+                .setParallelism(2);
 
-    env.execute("Flink pulsar flink source");
-  }
+        env.execute("Flink pulsar flink source");
+    }
 }

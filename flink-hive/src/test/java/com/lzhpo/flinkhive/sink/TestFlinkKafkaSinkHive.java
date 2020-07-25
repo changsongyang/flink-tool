@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.lzhpo.common.modeltest.UserModelTest;
 import com.lzhpo.flinkhive.config.HiveConnectionConfig;
 import com.lzhpo.flinkkafka.config.KafkaConsumerConfig;
-import com.lzhpo.flinkkafka.source.FkConsumer;
+import com.lzhpo.flinkkafka.source.FKConsumer;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -28,7 +28,7 @@ public class TestFlinkKafkaSinkHive {
         // 添加数据源
         DataStreamSource<ConsumerRecord<String, String>> consumerStreamSource =
                 env.addSource(
-                        new FkConsumer<>(
+                        new FKConsumer<>(
                                 new SimpleStringSchema(),
                                 KafkaConsumerConfig.builder()
                                         .setBootstrapServers("192.168.200.109:9092")

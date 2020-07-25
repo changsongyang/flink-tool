@@ -21,7 +21,7 @@ import java.util.Set;
  * @date 2020/6/20 03:14
  */
 @Slf4j
-public class FkConsumer<OUT> extends RichSourceFunction<OUT> implements ResultTypeQueryable<OUT> {
+public class FKConsumer<OUT> extends RichSourceFunction<OUT> implements ResultTypeQueryable<OUT> {
 
     /**
      * Kafka消费者
@@ -60,7 +60,7 @@ public class FkConsumer<OUT> extends RichSourceFunction<OUT> implements ResultTy
      * @param kafkaConsumerConfig   Kafka消费者配置
      * @param topics                消费者订阅的topic列表
      */
-    public FkConsumer(
+    public FKConsumer(
             DeserializationSchema<OUT> deserializationSchema,
             KafkaConsumerConfig kafkaConsumerConfig,
             Set<String> topics) {
