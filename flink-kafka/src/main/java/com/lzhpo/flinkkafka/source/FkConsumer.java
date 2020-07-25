@@ -15,13 +15,13 @@ import java.time.Duration;
 import java.util.Set;
 
 /**
- * Kafka消费者01
+ * Kafka Source
  *
  * @author Zhaopo Liu
  * @date 2020/6/20 03:14
  */
 @Slf4j
-public class KafkaSource<OUT> extends RichSourceFunction<OUT> implements ResultTypeQueryable<OUT> {
+public class FkConsumer<OUT> extends RichSourceFunction<OUT> implements ResultTypeQueryable<OUT> {
 
     /**
      * Kafka消费者
@@ -60,7 +60,7 @@ public class KafkaSource<OUT> extends RichSourceFunction<OUT> implements ResultT
      * @param kafkaConsumerConfig   Kafka消费者配置
      * @param topics                消费者订阅的topic列表
      */
-    public KafkaSource(
+    public FkConsumer(
             DeserializationSchema<OUT> deserializationSchema,
             KafkaConsumerConfig kafkaConsumerConfig,
             Set<String> topics) {

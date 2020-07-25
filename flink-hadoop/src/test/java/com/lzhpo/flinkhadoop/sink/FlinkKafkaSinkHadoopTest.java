@@ -2,7 +2,7 @@ package com.lzhpo.flinkhadoop.sink;
 
 import com.lzhpo.flinkhadoop.config.HadoopConnectionConfig;
 import com.lzhpo.flinkkafka.config.KafkaConsumerConfig;
-import com.lzhpo.flinkkafka.source.KafkaSource;
+import com.lzhpo.flinkkafka.source.FkConsumer;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -29,7 +29,7 @@ public class FlinkKafkaSinkHadoopTest {
         // 添加数据源
         DataStreamSource<ConsumerRecord<String, String>> consumerStreamSource =
                 env.addSource(
-                        new KafkaSource<>(
+                        new FkConsumer<>(
                                 new SimpleStringSchema(),
                                 KafkaConsumerConfig.builder()
                                         .setBootstrapServers("192.168.200.109:9092")

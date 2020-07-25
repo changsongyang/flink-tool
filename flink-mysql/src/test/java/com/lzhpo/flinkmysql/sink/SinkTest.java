@@ -3,7 +3,7 @@ package com.lzhpo.flinkmysql.sink;
 import com.google.gson.Gson;
 import com.lzhpo.common.modeltest.UserModelTest;
 import com.lzhpo.flinkkafka.config.KafkaConsumerConfig;
-import com.lzhpo.flinkkafka.source.KafkaSource;
+import com.lzhpo.flinkkafka.source.FkConsumer;
 import com.lzhpo.flinkmysql.config.MysqlConnectionConfig;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
@@ -30,7 +30,7 @@ public class SinkTest {
         // 添加数据源
         DataStreamSource<ConsumerRecord<String, String>> consumerStreamSource =
                 env.addSource(
-                        new KafkaSource<>(
+                        new FkConsumer<>(
                                 new SimpleStringSchema(),
                                 KafkaConsumerConfig.builder()
                                         .setBootstrapServers("192.168.200.109:9092")

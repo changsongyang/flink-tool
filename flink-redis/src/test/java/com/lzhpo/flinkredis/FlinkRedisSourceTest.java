@@ -1,7 +1,7 @@
 package com.lzhpo.flinkredis;
 
 import com.lzhpo.flinkkafka.config.KafkaProducerConfig;
-import com.lzhpo.flinkkafka.sink.KafkaSink;
+import com.lzhpo.flinkkafka.sink.FkProducer;
 import com.lzhpo.flinkredis.config.RedisConnectionConfig;
 import com.lzhpo.flinkredis.source.FlinkRedisSource;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
@@ -34,7 +34,7 @@ public class FlinkRedisSourceTest {
 
         // sink
         redisSourceStream.addSink(
-                new KafkaSink<>(
+                new FkProducer<>(
                         new SimpleStringSchema(),
                         "flink-producer01-test",
                         KafkaProducerConfig.builder()
