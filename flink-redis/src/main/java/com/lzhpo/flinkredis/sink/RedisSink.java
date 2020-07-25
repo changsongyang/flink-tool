@@ -32,10 +32,10 @@ public class RedisSink<IN> extends RichSinkFunction<IN> {
     protected Jedis jedis;
 
     public RedisSink(
-            SerializationSchema<IN> deserializationSchema,
+            SerializationSchema<IN> serializationSchema,
             RedisConnectionConfig redisConnectionConfig,
             int expireSecond) {
-        this.schema = deserializationSchema;
+        this.schema = serializationSchema;
         this.redisConnectionConfig = redisConnectionConfig;
         this.expireSecond = expireSecond;
     }

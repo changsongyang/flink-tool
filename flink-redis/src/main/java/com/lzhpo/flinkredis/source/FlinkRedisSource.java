@@ -3,6 +3,8 @@ package com.lzhpo.flinkredis.source;
 import com.lzhpo.flinkredis.config.RedisConnectionConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.java.typeutils.ResultTypeQueryable;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 import redis.clients.jedis.Jedis;
@@ -11,9 +13,9 @@ import redis.clients.jedis.Jedis;
  * @author Zhaopo Liu
  * @date 2020/6/20 03:14
  */
-public class FlinkRedisSource<IN> extends RichSourceFunction<IN> {
+public class FlinkRedisSource<OUT> extends RichSourceFunction<OUT> implements ResultTypeQueryable<OUT> {
 
-    private DeserializationSchema<IN> schema;
+    private DeserializationSchema<OUT> schema;
     private RedisConnectionConfig redisConnectionConfig;
 
     /** get redis data key */
@@ -24,7 +26,7 @@ public class FlinkRedisSource<IN> extends RichSourceFunction<IN> {
 
     protected boolean running = true;
 
-    public FlinkRedisSource(DeserializationSchema<IN> deserializationSchema,
+    public FlinkRedisSource(DeserializationSchema<OUT> deserializationSchema,
                             RedisConnectionConfig redisConnectionConfig, String key) {
         this.schema = deserializationSchema;
         this.redisConnectionConfig = redisConnectionConfig;
@@ -52,11 +54,11 @@ public class FlinkRedisSource<IN> extends RichSourceFunction<IN> {
      * @throws Exception
      */
     @Override
-    public void run(SourceContext<IN> ctx) throws Exception {
+    public void run(SourceContext<OUT> ctx) throws Exception {
         String dataKey  = jedis.get(key);
         if (StringUtils.isNotEmpty(dataKey) && running) {
             try {
-                IN result = schema.deserialize(dataKey.getBytes());
+                OUT result = schema.deserialize(dataKey.getBytes());
                 ctx.collect(result);
             } finally {
                 running = false;
@@ -67,5 +69,10 @@ public class FlinkRedisSource<IN> extends RichSourceFunction<IN> {
     @Override
     public void cancel() {
         running = false;
+    }
+
+    @Override
+    public TypeInformation<OUT> getProducedType() {
+        return schema.getProducedType();
     }
 }
