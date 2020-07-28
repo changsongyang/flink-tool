@@ -16,7 +16,6 @@
         <module>flink-hadoop</module>
         <module>flink-hbase</module>
         <module>flink-hive</module>
-        <module>serialize</module>
     </modules>
     <packaging>pom</packaging>
 
